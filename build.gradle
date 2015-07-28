@@ -1,0 +1,34 @@
+group 'com.stiandrobak'
+version '0.1'
+buildscript {
+    ext.kotlin_version = '0.12.1218'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+apply plugin: 'kotlin'
+apply plugin: 'java'
+repositories {
+    mavenCentral()
+}
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.stiandrobak.StiandrobakPackage'
+    }
+    from {configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}}
+}
+
+task(run, dependsOn: jar, type:JavaExec){
+    main = 'com.stiandrobak.StiandrobakPackage'
+    classpath = sourceSets.main.runtimeClasspath
+}
